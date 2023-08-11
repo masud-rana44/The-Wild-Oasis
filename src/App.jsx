@@ -1,57 +1,33 @@
-import { useEffect } from "react";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+
+import Login from "./pages/Login";
+import Bookings from "./pages/Bookings";
+import Cabins from "./pages/Cabins";
+import Dashboard from "./pages/Dashboard";
+import Settings from "./pages/Settings";
+import Account from "./pages/Account";
+import PageNotFound from "./pages/PageNotFound";
 import GlobalStyles from "./styles/GlobalStyles";
-import { getCabins } from "./services/apiCabins";
-import { styled } from "styled-components";
-import Button from "./ui/Button";
-import Input from "./ui/Input";
-import Row from "./ui/Row";
-
-const H1 = styled.h1`
-  font-size: 40px;
-  font-weight: 600;
-`;
-
-const StyledApp = styled.div`
-  background-color: var(--color-grey-800);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-items: center;
-  justify-content: center;
-  min-height: 100dvh;
-`;
+import AppLayout from "./ui/AppLayout";
 
 function App() {
-  useEffect(function () {
-    getCabins().then((data) => console.log(data));
-  }, []);
-
   return (
     <>
       <GlobalStyles />
-      <StyledApp>
-        <Row type="vertical">
-          <Row type="horizontal">
-            <H1>Homepage</H1>
-            <div>
-              <Button onClick={() => alert("Check in button clicked!")}>
-                Check in
-              </Button>
-              <Button onClick={() => alert("Check out button clicked!")}>
-                Check out
-              </Button>
-            </div>
-          </Row>
-
-          <Row type="vertical">
-            <H1>Form</H1>
-            <div>
-              <Input placeholder="Enter your name" />
-              <Input placeholder="Enter your email" />
-            </div>
-          </Row>
-        </Row>
-      </StyledApp>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<AppLayout />}>
+            <Route index element={<Navigate replace to="dashboard" />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="bookings" element={<Bookings />} />
+            <Route path="cabins" element={<Cabins />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="account" element={<Account />} />
+          </Route>
+          <Route path="login" element={<Login />} />
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
