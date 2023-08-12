@@ -30,11 +30,7 @@ const TableHeader = styled.header`
 `;
 
 function CabinTable() {
-  const {
-    isLoading,
-    data: cabins,
-    error,
-  } = useQuery({
+  const { isLoading, data: cabins } = useQuery({
     queryKey: ["cabin"],
     queryFn: getCabins,
   });
@@ -43,7 +39,7 @@ function CabinTable() {
 
   return (
     <Table as="table">
-      <TableHeader role="row">
+      <TableHeader as="tr">
         <div></div>
         <div>Cabin</div>
         <div>Capacity</div>
@@ -52,7 +48,7 @@ function CabinTable() {
         <div></div>
       </TableHeader>
       {cabins.map((cabin) => (
-        <CabinRow key={cabin.name} cabin={cabin} />
+        <CabinRow key={cabin.id} cabin={cabin} />
       ))}
     </Table>
   );
