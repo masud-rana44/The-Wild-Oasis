@@ -54,12 +54,12 @@ const Button = styled.button`
   box-shadow: var(--shadow-sm);
   cursor: pointer;
 
-  ${(props) => variations[props.variations]}
+  ${(props) => variations[props.variation]}
   ${(props) => sizes[props.sizes]}
 `;
 
 Button.defaultProps = {
-  variations: "primary",
+  variation: "primary",
   sizes: "medium",
 };
 
