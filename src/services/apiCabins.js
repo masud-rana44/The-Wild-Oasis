@@ -36,6 +36,7 @@ export async function createEditCabin(newCabin, id) {
 
   if (error) {
     console.error(error);
+    // BUG:: No error handling for edit
     throw new Error("Cabin could not be created");
   }
 
