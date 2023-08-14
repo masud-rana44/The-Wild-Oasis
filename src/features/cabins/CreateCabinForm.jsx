@@ -9,7 +9,7 @@ import FormRow from "../../ui/FormRow";
 import { useCreateCabin } from "./useCreateCabin";
 import { useUpdateCabin } from "./useUpdateCabin";
 
-function CreateCabinForm({ cabinToUpdate = {} }) {
+function CreateCabinForm({ cabinToUpdate = {}, onCloseModal }) {
   const { createCabin, isCreating } = useCreateCabin();
   const { updateCabin, isUpdating } = useUpdateCabin();
 
@@ -30,7 +30,10 @@ function CreateCabinForm({ cabinToUpdate = {} }) {
       updateCabin(
         { newCabinData: { ...data, image }, id: updateId },
         {
-          onSuccess: () => reset(),
+          onSuccess: () => {
+            reset();
+            onCloseModal?.();
+          },
         }
       );
     else
@@ -39,13 +42,19 @@ function CreateCabinForm({ cabinToUpdate = {} }) {
         {
           // here onSuccess receive the newly created cabin data
           // access like: (data) => {...}
-          onSuccess: () => reset(),
+          onSuccess: () => {
+            reset();
+            onCloseModal?.();
+          },
         }
       );
   }
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form
+      onSubmit={handleSubmit(onSubmit)}
+      type={onCloseModal ? "modal" : "regular"}
+    >
       <FormRow label="Cabin name" error={errors?.name?.message}>
         <Input
           type="text"
@@ -134,7 +143,11 @@ function CreateCabinForm({ cabinToUpdate = {} }) {
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button variation="secondary" type="reset">
+        <Button
+          variation="secondary"
+          type="reset"
+          onClick={() => onCloseModal?.()}
+        >
           Cancel
         </Button>
         <Button disabled={isWorking}>

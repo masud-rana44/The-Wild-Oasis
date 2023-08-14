@@ -64,3 +64,25 @@ function Modal({ children, onClose }) {
 }
 
 export default Modal;
+
+// Calling...
+// function AddCabin() {
+//   const [isModalOpen, setIsModalOpen] = useState(false);
+
+//   function handleCloseModal() {
+//     setIsModalOpen(false);
+//   }
+
+//   return (
+//     <div>
+//       <Button onClick={() => setIsModalOpen((show) => !show)}>
+//         Add new cabin
+//       </Button>
+//       {isModalOpen && (
+//         <Modal onClose={handleCloseModal}>
+//           <CreateCabinForm onCloseModal={handleCloseModal} />
+//         </Modal>
+//       )}
+//     </div>
+//   );
+// }
