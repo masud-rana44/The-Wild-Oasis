@@ -18,7 +18,11 @@ export async function getBookings({ filter, sortBy, page }) {
     query = query.order(sortBy.field, { ascending: isAscending });
 
   // PAGE
-  if (page) query.range(page.start, page.end);
+  if (page) {
+    const from = (page - 1) * Number(import.meta.env.VITE_APP_PAGE_SIZE);
+    const to = from + Number(import.meta.env.VITE_APP_PAGE_SIZE);
+    query.range(from, to);
+  }
 
   const { data, count, error } = await query;
 

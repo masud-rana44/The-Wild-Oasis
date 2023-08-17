@@ -4,9 +4,9 @@ const StyledErrorFallback = styled.main`
   height: 100vh;
   background-color: var(--color-grey-50);
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   justify-content: center;
-  padding: 4.8rem;
+  padding: 2rem 4.8rem 4.8rem 4.8rem;
 `;
 
 const Box = styled.div`

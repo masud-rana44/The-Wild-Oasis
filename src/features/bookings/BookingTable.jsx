@@ -5,10 +5,12 @@ import { useBookings } from "./useBookings";
 import Empty from "../../ui/Empty";
 import Spinner from "../../ui/Spinner";
 import Pagination from "../../ui/Pagination";
+import ErrorFallback from "../../ui/ErrorFallback";
 
 function BookingTable() {
-  const { bookings, count, isLoading } = useBookings();
+  const { bookings, isLoading, error, count } = useBookings();
 
+  if (error) return <ErrorFallback message={error.message} />;
   if (isLoading) return <Spinner />;
   if (!bookings.length) return <Empty resourceName="bookings" />;
 
