@@ -1,3 +1,4 @@
+// import { useEffect } from "react";
 import styled from "styled-components";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 import { useSearchParams } from "react-router-dom";
@@ -65,6 +66,15 @@ function Pagination({ count }) {
   const currentPage = Number(searchParams.get("page")) || 1;
 
   const pageCount = Math.ceil(count / PAGE_SIZE);
+
+  // useEffect(() => {
+  //   console.log(searchParams.get("page"), count % PAGE_SIZE);
+  //   if (searchParams.get("page") && count % PAGE_SIZE === 0) {
+  //     const prev = currentPage === 1 ? currentPage : currentPage - 1;
+  //     searchParams.set("page", prev);
+  //     setSearchParams(searchParams);
+  //   }
+  // }, [count, currentPage, searchParams, setSearchParams]);
 
   function nextPage() {
     const next = currentPage === pageCount ? currentPage : currentPage + 1;
