@@ -25,6 +25,7 @@ function ProtectedRoute({ children }) {
     },
     [isAuthenticated, isLoading, navigate]
   );
+  // if (!isAuthenticated && !isLoading) navigate("/login");
 
   // 3. While loading, show a spinner
   if (isLoading)
