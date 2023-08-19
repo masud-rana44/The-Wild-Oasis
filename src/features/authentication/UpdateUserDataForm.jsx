@@ -24,13 +24,13 @@ function UpdateUserDataForm() {
 
   function handleSubmit(e) {
     e.preventDefault();
-
     if (!fullName) return;
     updateUser(
       { fullName, avatar },
       {
         onSuccess: () => {
           setAvatar(null);
+          e.target.reset();
         },
       }
     );
