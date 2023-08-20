@@ -1,4 +1,3 @@
-import ErrorFallback from "../../ui/ErrorFallback";
 import Form from "../../ui/Form";
 import FormRow from "../../ui/FormRow";
 import Input from "../../ui/Input";
@@ -15,11 +14,8 @@ function UpdateSettingsForm() {
       breakfastPrice,
     } = {},
     isLoading,
-    error,
   } = useSettings();
   const { updateSetting, isUpdating } = useUpdateSetting();
-
-  if (error) return <ErrorFallback message={error.message} />;
 
   if (isLoading) return <Spinner />;
 

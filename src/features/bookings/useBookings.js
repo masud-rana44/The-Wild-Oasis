@@ -25,7 +25,7 @@ export function useBookings() {
 
   // QUERY
   const {
-    data: { data: bookings = {}, count } = {},
+    data: { data: bookings, count } = {},
     error,
     isLoading,
   } = useQuery({

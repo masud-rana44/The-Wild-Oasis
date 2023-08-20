@@ -6,7 +6,7 @@ export function useBooking() {
   const { bookingId } = useParams();
 
   const {
-    data: booking = {},
+    data: booking,
     error,
     isLoading,
   } = useQuery({

@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 
-const sizes = {
+const size = {
   small: css`
     font-size: 1.2rem;
     padding: 0.4rem 0.8rem;
@@ -20,7 +20,7 @@ const sizes = {
   `,
 };
 
-const variations = {
+const variation = {
   primary: css`
     color: var(--color-brand-50);
     background-color: var(--color-brand-600);
@@ -54,13 +54,13 @@ const Button = styled.button`
   box-shadow: var(--shadow-sm);
   cursor: pointer;
 
-  ${(props) => variations[props.variation]}
-  ${(props) => sizes[props.sizes]}
+  ${(props) => variation[props.variation]}
+  ${(props) => size[props.size]}
 `;
 
 Button.defaultProps = {
   variation: "primary",
-  sizes: "medium",
+  size: "medium",
 };
 
 export default Button;
