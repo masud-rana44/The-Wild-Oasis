@@ -49,12 +49,14 @@ export async function getBooking(id) {
   return data;
 }
 
-export async function createBooking({ newGuest, cabinId, newBooking }) {
+export async function createBooking({ cabinName, newGuest, newBooking }) {
+  let updateBooking;
+
   // check if there is a cabin or Not
   const { data: cabinData, error: cabinError } = await supabase
     .from("cabins")
     .select("*")
-    .eq("id", cabinId);
+    .eq("name", cabinName);
 
   if (cabinError || !cabinData.length) {
     console.error(cabinError);
@@ -62,19 +64,66 @@ export async function createBooking({ newGuest, cabinId, newBooking }) {
   }
 
   // check is there already a guest with this email, If not create one
-  const { data: guestData, error: guestError } = await supabase
+  const { data: guestDataOld, error: guestErrorOld } = await supabase
     .from("guests")
     .select("*")
     .eq("email", newGuest.email);
 
-  if (guestError) {
-    console.log(guestError);
+  if (guestErrorOld) {
+    console.log(guestErrorOld);
     return;
   }
 
-  console.log(guestData, cabinData);
+  if (guestDataOld.length === 0) {
+    // create new guest
+    const obj = await supabase.from("guests").insert([newGuest]);
 
-  // if(guestData.length) newBooking.guestId =
+    // if (guestErrorNew) {
+    //   console.error(cabinError);
+    //   throw new Error("Guest could not created");
+    // }
+
+    console.log(obj);
+
+    updateBooking = {
+      ...newBooking,
+      cabinId: cabinData.at(0).id,
+      guestId: obj.id,
+      cabinPrice:
+        (cabinData.at(0).regularPrice - cabinData.at(0).discount) *
+        newBooking.numNights,
+      totalPrice:
+        (cabinData.at(0).regularPrice - cabinData.at(0).discount) *
+          newBooking.numNights +
+        newBooking.extrasPrice,
+    };
+  } else {
+    updateBooking = {
+      ...newBooking,
+      cabinId: cabinData.at(0).id,
+      guestId: guestDataOld.at(0).id,
+      cabinPrice:
+        (cabinData.at(0).regularPrice - cabinData.at(0).discount) *
+        newBooking.numNights,
+      totalPrice:
+        (cabinData.at(0).regularPrice - cabinData.at(0).discount) *
+          newBooking.numNights +
+        newBooking.extrasPrice,
+    };
+  }
+
+  // console.log(updateBooking);
+
+  // Create new booking
+  // const { data, error } = await supabase
+  //   .from("bookings")
+  //   .insert([updateBooking]);
+  // if (error) {
+  //   console.log(error);
+  //   throw new Error(error.message);
+  // }
+
+  // return data;
 }
 
 // Returns all BOOKINGS that are were created after the given date. Useful to get bookings created in the last 30 days, for example.

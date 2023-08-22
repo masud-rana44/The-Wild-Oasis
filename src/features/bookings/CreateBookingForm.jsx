@@ -9,6 +9,7 @@ import { useSettings } from "../settings/useSettings.js";
 import Spinner from "../../ui/Spinner";
 import { addDays, differenceInDays, isAfter } from "date-fns";
 import { getCountryFlag } from "../../utils/helpers";
+import { useCreateBooking } from "./useCreateBooking";
 
 const StyledSelect = styled.select`
   font-size: 1.4rem;
@@ -68,6 +69,7 @@ const Option = styled.div`
 
 function CreateBookingForm() {
   const { settings, isLoading } = useSettings();
+  const { createBooking, isCreating } = useCreateBooking();
   const { register, handleSubmit, formState, getValues } = useForm();
   const { errors } = formState;
 
@@ -105,7 +107,7 @@ function CreateBookingForm() {
           : 0,
     };
 
-    console.log(cabinName, guestData, newBooking);
+    createBooking({ cabinName, newGuest: guestData, newBooking });
   }
 
   return (
@@ -114,6 +116,7 @@ function CreateBookingForm() {
         <Input
           type="text"
           id="cabinName"
+          disabled={isCreating}
           {...register("cabinName", {
             required: "This filed is required",
           })}
@@ -123,6 +126,7 @@ function CreateBookingForm() {
         <Input
           type="text"
           id="fullName"
+          disabled={isCreating}
           {...register("fullName", {
             required: "This filed is required",
           })}
@@ -132,6 +136,7 @@ function CreateBookingForm() {
         <Input
           type="email"
           id="email"
+          disabled={isCreating}
           {...register("email", {
             required: "This filed is required",
             pattern: {
@@ -145,6 +150,7 @@ function CreateBookingForm() {
         <Input
           type="text"
           id="nationality"
+          disabled={isCreating}
           {...register("nationality", {
             required: "This filed is required",
           })}
@@ -154,6 +160,7 @@ function CreateBookingForm() {
         <Input
           type="number"
           id="numGuests"
+          disabled={isCreating}
           defaultValue={1}
           {...register("numGuests", {
             required: "This filed is required",
@@ -164,6 +171,7 @@ function CreateBookingForm() {
         <Input
           type="text"
           id="nationalID"
+          disabled={isCreating}
           {...register("nationalID", {
             required: "This filed is required",
           })}
@@ -173,6 +181,7 @@ function CreateBookingForm() {
         <Input
           type="date"
           id="startDate"
+          disabled={isCreating}
           {...register("startDate", {
             required: "This filed is required",
           })}
@@ -182,6 +191,7 @@ function CreateBookingForm() {
         <Input
           type="date"
           id="endDate"
+          disabled={isCreating}
           {...register("endDate", {
             required: "This filed is required",
             validate: (value) =>
@@ -197,6 +207,7 @@ function CreateBookingForm() {
         {/* customize later */}
         <StyledSelect
           id="status"
+          disabled={isCreating}
           {...register("status", {
             required: "This filed is required",
           })}
@@ -214,6 +225,7 @@ function CreateBookingForm() {
               value={true}
               name="hasBreakfast"
               id="yes"
+              disabled={isCreating}
               {...register("hasBreakfast", {
                 required: "This filed is required",
               })}
@@ -226,6 +238,7 @@ function CreateBookingForm() {
               value={false}
               name="hasBreakfast"
               id="no"
+              disabled={isCreating}
               {...register("hasBreakfast", {
                 required: "This filed is required",
               })}
@@ -242,6 +255,7 @@ function CreateBookingForm() {
               value={true}
               name="isPaid"
               id="paid"
+              disabled={isCreating}
               {...register("isPaid", {
                 required: "This filed is required",
               })}
@@ -254,6 +268,7 @@ function CreateBookingForm() {
               value={false}
               name="isPaid"
               id="unpaid"
+              disabled={isCreating}
               {...register("isPaid", {
                 required: "This filed is required",
               })}
@@ -263,13 +278,17 @@ function CreateBookingForm() {
         </StyledInputRadio>
       </FormRow>
       <FormRow label="Observations" error={errors?.observations?.message}>
-        <Textarea id="observations" {...register("observations")} />
+        <Textarea
+          id="observations"
+          disabled={isCreating}
+          {...register("observations")}
+        />
       </FormRow>
       <FormRow>
-        <Button variation="secondary" type="reset">
+        <Button variation="secondary" disabled={isCreating} type="reset">
           Cancel
         </Button>
-        <Button>Create new booking</Button>
+        <Button disabled={isCreating}>Create new booking</Button>
       </FormRow>
     </Form>
   );
