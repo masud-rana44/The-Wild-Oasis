@@ -5,6 +5,7 @@ const StyledFormRow = styled.div`
   align-items: center;
   grid-template-columns: 24rem 1fr 1.2fr;
   gap: 2.4rem;
+  width: 100%;
 
   padding: 1.2rem 0;
 
@@ -25,6 +26,10 @@ const StyledFormRow = styled.div`
     justify-content: flex-end;
     gap: 1.2rem;
   }
+
+  & input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+  }
 `;
 
 const Label = styled.label`
@@ -39,7 +44,7 @@ const Error = styled.span`
 function FormRow({ label, error, children }) {
   return (
     <StyledFormRow>
-      {label && <Label htmlFor={children.props.id}>{label}</Label>}
+      {label && <Label htmlFor={children?.props?.id}>{label}</Label>}
       {children}
       {error && <Error>{error}</Error>}
     </StyledFormRow>

@@ -28,6 +28,11 @@ export async function login({ email, password }) {
   return data;
 }
 
+export async function logout() {
+  const { error } = await supabase.auth.signOut();
+  if (error) throw new Error(error.message);
+}
+
 export async function getCurrentUser() {
   const { data: session } = await supabase.auth.getSession();
   if (!session) return null;
@@ -39,9 +44,15 @@ export async function getCurrentUser() {
   return data?.user;
 }
 
-export async function logout() {
-  const { error } = await supabase.auth.signOut();
-  if (error) throw new Error(error.message);
+export async function getUsers() {
+  const { data, error } = await supabase.auth.admin.listUsers();
+
+  if (error) {
+    console.log(error.message);
+    throw new Error("Users could not be loaded");
+  }
+
+  return data;
 }
 
 export async function updateCurrentUser({ password, fullName, avatar }) {
