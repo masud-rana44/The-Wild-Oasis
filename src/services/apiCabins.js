@@ -11,6 +11,20 @@ export async function getCabins() {
   return data;
 }
 
+export async function getCabin(id) {
+  const { data, error } = await supabase
+    .from("cabins")
+    .select("*")
+    .eq("id", id);
+
+  if (error) {
+    console.error(error);
+    throw new Error("Cabins could not be deleted");
+  }
+
+  return data;
+}
+
 export async function createUpdateCabin(newCabin, id) {
   const hasImagePath = newCabin.image?.startsWith?.(supabaseUrl);
 

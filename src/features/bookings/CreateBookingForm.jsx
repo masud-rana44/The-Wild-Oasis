@@ -7,7 +7,8 @@ import Textarea from "../../ui/Textarea";
 import { styled } from "styled-components";
 import { useSettings } from "../settings/useSettings.js";
 import Spinner from "../../ui/Spinner";
-import { addDays, isAfter } from "date-fns";
+import { addDays, differenceInDays, isAfter } from "date-fns";
+import { getCountryFlag } from "../../utils/helpers";
 
 const StyledSelect = styled.select`
   font-size: 1.4rem;
@@ -69,16 +70,55 @@ function CreateBookingForm() {
   const { settings, isLoading } = useSettings();
   const { register, handleSubmit, formState, getValues } = useForm();
   const { errors } = formState;
-  const { minBookingLength } = settings;
-
-  function onSubmit(data) {
-    console.log(data);
-  }
 
   if (isLoading) return <Spinner />;
+  const { minBookingLength, breakfastPrice } = settings;
+
+  async function onSubmit(data) {
+    const cabinName = data.cabinName;
+
+    const guestData = {
+      fullName: data.fullName,
+      email: data.email,
+      nationalID: data.nationalID,
+      nationality: data.nationality,
+      countryFlag: await getCountryFlag(data.nationality),
+    };
+
+    const bookingData = {
+      startDate: new Date(data.startDate).toISOString(),
+      endDate: new Date(data.endDate).toISOString(),
+      numNights: differenceInDays(
+        new Date(data.endDate),
+        new Date(data.startDate)
+      ),
+      numGuests: Number(data.numGuests),
+      hasBreakfast: data.hasBreakfast === "true" ? true : false,
+      isPaid: data.isPaid === "false" ? false : true,
+    };
+
+    const newBooking = {
+      ...bookingData,
+      extrasPrice:
+        bookingData.hasBreakfast === true
+          ? bookingData.numGuests * bookingData.numNights * breakfastPrice
+          : 0,
+    };
+
+    console.log(cabinName, guestData, newBooking);
+  }
 
   return (
     <Form type="modal" onSubmit={handleSubmit(onSubmit)}>
+      <FormRow label="Cabin name" error={errors?.cabinName?.message}>
+        <Input
+          type="text"
+          id="cabinName"
+          {...register("cabinName", {
+            required: "This filed is required",
+          })}
+        />
+      </FormRow>
       <FormRow label="Guest name" error={errors?.fullName?.message}>
         <Input
           type="text"

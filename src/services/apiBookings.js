@@ -49,6 +49,34 @@ export async function getBooking(id) {
   return data;
 }
 
+export async function createBooking({ newGuest, cabinId, newBooking }) {
+  // check if there is a cabin or Not
+  const { data: cabinData, error: cabinError } = await supabase
+    .from("cabins")
+    .select("*")
+    .eq("id", cabinId);
+
+  if (cabinError || !cabinData.length) {
+    console.error(cabinError);
+    throw new Error("Cabin not found! Please provide a valid cabin ID");
+  }
+
+  // check is there already a guest with this email, If not create one
+  const { data: guestData, error: guestError } = await supabase
+    .from("guests")
+    .select("*")
+    .eq("email", newGuest.email);
+
+  if (guestError) {
+    console.log(guestError);
+    return;
+  }
+
+  console.log(guestData, cabinData);
+
+  // if(guestData.length) newBooking.guestId =
+}
+
 // Returns all BOOKINGS that are were created after the given date. Useful to get bookings created in the last 30 days, for example.
 // date: ISOString
 export async function getBookingsAfterDate(date) {
