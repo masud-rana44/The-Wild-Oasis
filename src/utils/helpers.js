@@ -55,9 +55,3 @@ export function prepareData(startData, stays) {
 
   return data;
 }
-
-export async function getCountryFlag(country) {
-  const res = await fetch(`https://restcountries.com/v3.1/name/${country}`);
-  const data = await res.json();
-  return data[0].flags.svg;
-}

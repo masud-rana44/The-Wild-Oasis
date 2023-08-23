@@ -58,9 +58,13 @@ export async function createBooking({ cabinName, newGuest, newBooking }) {
     .select("*")
     .eq("name", cabinName);
 
-  if (cabinError || !cabinData.length) {
+  if (cabinError) {
     console.error(cabinError);
-    throw new Error("Cabin not found! Please provide a valid cabin ID");
+    throw new Error(cabinError.message);
+  }
+
+    if (!cabinData.length) {
+    throw new Error("No cabin found with this name");
   }
 
   // check is there already a guest with this email, If not create one
@@ -76,19 +80,21 @@ export async function createBooking({ cabinName, newGuest, newBooking }) {
 
   if (guestDataOld.length === 0) {
     // create new guest
-    const obj = await supabase.from("guests").insert([newGuest]);
+    const { data: guestDataNew, error: guestErrorNew } = await supabase
+      .from("guests")
+      .insert([newGuest])
+      .select()
+      .single();
 
-    // if (guestErrorNew) {
-    //   console.error(cabinError);
-    //   throw new Error("Guest could not created");
-    // }
-
-    console.log(obj);
+    if (guestErrorNew) {
+      console.error(cabinError);
+      throw new Error("Guest could not created");
+    }
 
     updateBooking = {
       ...newBooking,
       cabinId: cabinData.at(0).id,
-      guestId: obj.id,
+      guestId: guestDataNew.id,
       cabinPrice:
         (cabinData.at(0).regularPrice - cabinData.at(0).discount) *
         newBooking.numNights,
@@ -112,18 +118,16 @@ export async function createBooking({ cabinName, newGuest, newBooking }) {
     };
   }
 
-  // console.log(updateBooking);
-
   // Create new booking
-  // const { data, error } = await supabase
-  //   .from("bookings")
-  //   .insert([updateBooking]);
-  // if (error) {
-  //   console.log(error);
-  //   throw new Error(error.message);
-  // }
+  const { data, error } = await supabase
+    .from("bookings")
+    .insert([updateBooking]);
+  if (error) {
+    console.log(error);
+    throw new Error(error.message);
+  }
 
-  // return data;
+  return data;
 }
 
 // Returns all BOOKINGS that are were created after the given date. Useful to get bookings created in the last 30 days, for example.

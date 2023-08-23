@@ -6,10 +6,10 @@ import Input from "../../ui/Input";
 import Textarea from "../../ui/Textarea";
 import { styled } from "styled-components";
 import { useSettings } from "../settings/useSettings.js";
-import Spinner from "../../ui/Spinner";
 import { addDays, differenceInDays, isAfter } from "date-fns";
-import { getCountryFlag } from "../../utils/helpers";
 import { useCreateBooking } from "./useCreateBooking";
+import { toast } from "react-hot-toast";
+import { flags } from "../../data/data-flags";
 
 const StyledSelect = styled.select`
   font-size: 1.4rem;
@@ -67,24 +67,28 @@ const Option = styled.div`
 //   },
 // ];
 
-function CreateBookingForm() {
-  const { settings, isLoading } = useSettings();
+function CreateBookingForm({ onCloseModal }) {
+  const { settings } = useSettings();
   const { createBooking, isCreating } = useCreateBooking();
-  const { register, handleSubmit, formState, getValues } = useForm();
-  const { errors } = formState;
+  const { register, handleSubmit, formState, getValues, reset } = useForm();
 
-  if (isLoading) return <Spinner />;
+  const { errors } = formState;
   const { minBookingLength, breakfastPrice } = settings;
 
-  async function onSubmit(data) {
+  function onSubmit(data) {
     const cabinName = data.cabinName;
+    const countryFlag = flags[data.nationality.toLowerCase()];
+
+    if (!countryFlag) {
+      return toast.error("Nationality doesn't exists");
+    }
 
     const guestData = {
       fullName: data.fullName,
       email: data.email,
       nationalID: data.nationalID,
       nationality: data.nationality,
-      countryFlag: await getCountryFlag(data.nationality),
+      countryFlag,
     };
 
     const bookingData = {
@@ -97,6 +101,7 @@ function CreateBookingForm() {
       numGuests: Number(data.numGuests),
       hasBreakfast: data.hasBreakfast === "true" ? true : false,
       isPaid: data.isPaid === "false" ? false : true,
+      status: data.status,
     };
 
     const newBooking = {
@@ -107,7 +112,15 @@ function CreateBookingForm() {
           : 0,
     };
 
-    createBooking({ cabinName, newGuest: guestData, newBooking });
+    createBooking(
+      { cabinName, newGuest: guestData, newBooking },
+      {
+        onSuccess: () => {
+          reset();
+          onCloseModal?.();
+        },
+      }
+    );
   }
 
   return (
@@ -164,6 +177,10 @@ function CreateBookingForm() {
           defaultValue={1}
           {...register("numGuests", {
             required: "This filed is required",
+            min: {
+              value: 1,
+              message: "Guest couldn't be 0 or negative",
+            },
           })}
         />
       </FormRow>
