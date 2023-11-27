@@ -14,6 +14,23 @@ const Main = styled.main`
   background-color: var(--color-grey-50);
   padding: 4rem 4.8rem 6.4rem;
   overflow: auto;
+
+  &::-webkit-scrollbar {
+    width: 1.2rem;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--color-grey-0);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-grey-200);
+    border-radius: var(--border-radius-lg);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--color-grey-300);
+  }
 `;
 
 const Container = styled.div`

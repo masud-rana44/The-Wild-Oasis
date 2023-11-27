@@ -19,7 +19,22 @@ const StyledModal = styled.div`
   overflow: auto;
 
   &::-webkit-scrollbar {
-    display: none;
+    width: 1rem;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--color-grey-0);
+    border-top-right-radius: var(--border-radius-lg);
+    border-bottom-right-radius: var(--border-radius-lg);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-grey-200);
+    border-radius: var(--border-radius-lg);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--color-grey-300);
   }
 `;
 

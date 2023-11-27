@@ -68,11 +68,12 @@ const Option = styled.div`
 // ];
 
 function CreateBookingForm({ onCloseModal }) {
-  const { settings } = useSettings();
+  const { settings, isLoading } = useSettings();
   const { createBooking, isCreating } = useCreateBooking();
   const { register, handleSubmit, formState, getValues, reset } = useForm();
 
   const { errors } = formState;
+  if (isLoading) return;
   const { minBookingLength, breakfastPrice } = settings;
 
   function onSubmit(data) {
@@ -302,7 +303,12 @@ function CreateBookingForm({ onCloseModal }) {
         />
       </FormRow>
       <FormRow>
-        <Button variation="secondary" disabled={isCreating} type="reset">
+        <Button
+          variation="secondary"
+          disabled={isCreating}
+          type="reset"
+          onClick={() => onCloseModal?.()}
+        >
           Cancel
         </Button>
         <Button disabled={isCreating}>Create new booking</Button>

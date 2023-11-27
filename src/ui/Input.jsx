@@ -6,6 +6,11 @@ const Input = styled.input`
   border-radius: var(--border-radius-sm);
   padding: 0.8rem 1.2rem;
   box-shadow: var(--shadow-sm);
+
+  &[type="date"]::-webkit-calendar-picker-indicator {
+    background-color: var(--color-brand-800);
+    border-radius: 0.2rem;
+  }
 `;
 
 export default Input;
